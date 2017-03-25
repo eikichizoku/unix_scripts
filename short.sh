@@ -40,7 +40,7 @@ echo''
 read -r -e -p "Folder:" folder
 echo''
 
-echo $folder
+#echo $folder
 
 echo ${BLUE}• Over what character lenght should i display files under this folder ?${WHITE} 
 read maxlenght
@@ -73,8 +73,8 @@ sleep 2
 
 
 #Illegal characters removal except space before and after basename
-echo •Oh btw i removed all the illegal characters possible '" # % * : < > ? / \ |' in all the files and folders i went throught :")"
-find /Users/vinh/Desktop/TEST/ | rename 's/[?<>\\:*#|\%"]//g' -v * > .illegal.txt 2>&1
+#echo •Oh btw i removed all the illegal characters possible '" # % * : < > ? / \ |' in all the files and folders i went throught :")"
+#find /Users/vinh/Desktop/TEST/ | rename 's/[?<>\\:*#|\%"]//g' -v * > .illegal.txt 2>&1
 
 
 #Install brew then install the tag utility
