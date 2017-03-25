@@ -82,8 +82,15 @@ echo ${BLUE}• I will now install some stuff to tag all those files, this will 
 echo''
 echo ${HIGHLIGHT}Strike any key to start the installation${NC}
 read go
-echo Entering the Matrix...
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &&brew install tag
+
+if [ -f "/usr/local/bin/brew" ];
+	then
+   		echo "Nothing to install !"
+	else
+   		echo "Entering the Matrix...">&2
+   		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &&brew install tag
+fi
+
 echo ${HIGHLIGHT}We"'"re done ! Strike return to continue
 read go
 
