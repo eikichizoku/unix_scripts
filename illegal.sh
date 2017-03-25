@@ -53,8 +53,18 @@ echo ${BLUE}• I will now install some stuff to rename all those files, this wi
 echo''
 echo ${HIGHLIGHT}Strike any key to start the installation${NC}
 read go
-echo Entering the Matrix...
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &&brew install rename
+
+set -x
+if [ -f "/usr/local/bin/rename" ];
+        then
+                echo "Nothing to install !"
+		echo''
+        else
+                echo "Entering the Matrix...">&2
+                /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &&brew install rename
+fi
+
+echo''
 echo ${HIGHLIGHT}We"'"re done ! Strike return to continue
 read go
 echo''
