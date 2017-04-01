@@ -42,7 +42,9 @@ echo''
 
 echo $folder
 
-echo ${BLUE}• Please type all the characters you want to get rid of in your files names${WHITE} 
+echo ${BLUE} • Please type all the characters you want to get rid of in your files names${WHITE} 
+
+export illegalchars
 read illegalchars
 echo''
 
@@ -54,7 +56,6 @@ echo''
 echo ${HIGHLIGHT}Strike any key to start the installation${NC}
 read go
 
-set -x
 if [ -f "/usr/local/bin/rename" ];
         then
                 echo "Nothing to install !"
@@ -71,7 +72,8 @@ echo''
 
 #Illegal characters removal except space before and after basename
 echo Removing now characters $illegalchars  in all the files and folders under $folder...
-find $folder | rename 's/'$illegalchars'//g' -v * > .illegal.txt 2>&1
+cd $folder
+rename 's/'$illegalchars'//g' -v *
 sleep 2
 #'s/[?<>\\:*#|\%"]//g'
 
