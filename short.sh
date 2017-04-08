@@ -1,5 +1,5 @@
 #!/bin/sh
-#v1.0 (26 Feb 2017) Script by Vinh Francis Guyait <vinh@fb.com>. Determine for files their whole path character lenght, sort by longest, tag them in Mac Os.
+#v1.0 (26 Feb 2017) Script by Vinh Francis Guyait. Determine for files their whole path character lenght, sort by longest, tag them in Mac Os.
 #Will also rename basename files to match Micro$oft basename filesystems requirements - Useful when you migrate stuff to SharePoint.
 
 #count length for each files
@@ -17,8 +17,8 @@ clear
 
 #Input folder path we want to analyze and give value for character lenght we want to list
 echo ${BLUE}"            ▄▄"
-echo ${BLUE}"           █░░█           v1.0 Scripted by Vinh Francis Guyait <vinh@fb.com>"
-echo ${BLUE}"           █░░█           IT-FIELD EMEA"     
+echo ${BLUE}"           █░░█           v1.0 Scripted by Vinh Francis Guyait"
+echo ${BLUE}"           █░░█"     
 echo ${BLUE}"          █░░░█"
 echo ${BLUE}"         █░░░░█"
 echo ${BLUE}"███████▄▄█░░░░██████▄▄"   
