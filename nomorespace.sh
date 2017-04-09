@@ -1,8 +1,5 @@
 #!/bin/sh
-
-
-
-
+#This a simple script that run recursively over the current user $HOME directory or a provided path to list the heaviest folder and open it in Finder for human investigation.
 
 
 #Silly variables declarations
@@ -22,8 +19,10 @@ if [[ "$yn" =~ ^([yY][eE][sS]|[yY])+$ ]]
 		echo ''
 		echo 'Here are the folders under '$USER' account where are the largest files'
 		du -sh $HOME/* | grep '[0-9]G\>' | sort -k 1rn
+		
+		echo 'The folder BIGHOMEFOLDER is the biggest one in your account home directory with a size of SIZE'
 		echo ''
-        	echo 'I will open the biggest folder for you to investigate'
+        	echo 'I will open BIGHOMEFOLDER for you to investigate'
 	        open1=`du -sh $HOME/* | grep '[0-9]G\>' | sort -k 1rn | head -1`
 		open $open1
 	
