@@ -23,9 +23,7 @@ if [[ "$yn" =~ ^([yY][eE][sS]|[yY])+$ ]]
 		bighomesize=`du -sh $HOME/* | grep '[0-9]G\>' | sort -k 1rn | head -1 | awk '{ print $1 }'`
 		echo 'The folder '${RED}''$bighome' '${WHITE}'is the biggest one in your account home directory with a size of '${RED}''$bighomesize''${WHITE} ${NC}
 		echo''
-
 	else
-
 		read -ep "Folder:" WHERE
 	
 			case ${WHERE} in
@@ -34,16 +32,29 @@ if [[ "$yn" =~ ^([yY][eE][sS]|[yY])+$ ]]
 					echo HasSpace
 					bigwherespace=`du -sh "$WHERE"/* | grep '[0-9]G\>' | sort -rnk1 | LC_ALL=C sed -e "s,[^/]*\(/.*\),'\1',;q"`
 					bigwherespacesize=`du -sh "$WHERE"/*|grep '[0-9]G\>'|sort -k 1rn |head -1|awk '{ print $1 }'`
-					echo $bigwherespace		
-					echo $bigwherespacesize
+						
+						if [ -z "$bigwherespace" ]
+							then
+								echo "Nothing over 1Gb in $WHERE - probably need to look somewhere else !"
+							else
+								echo The biggest file / folder is $bigwherespace with a size of $bigwherespacesize
+						fi
 					;;  				
 				* )
 					echo NoSpace
 					bigwhere=`du -sh $WHERE/* | grep '[0-9]G\>' | sort -rnk1 | LC_ALL=C sed -e "s,[^/]*\(/.*\),'\1',;q"`
 					bigwheresize=`du -sh $WHERE/*|grep '[0-9]G\>'|sort -k 1rn |head -1|awk '{ print $1 }'`
-					echo $bigwhere
-					echo $bigwheresize	
+
+						if [ -z "$bigwhere" ]
+							then
+								echo "Nothing over 1Gb here - probably need to look somewhere else !"
+							else
+								echo the biggest file / folder is $bigwhere with a size of $bigwheresize
+						fi
 				;;
 			esac
 
 fi
+
+#Re-run the script to look somewhere else or quit ?
+
