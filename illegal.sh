@@ -16,20 +16,36 @@ NC='\033[0m'
 clear
 
 #Input folder path we want to analyze and give value for character lenght we want to list
-echo ${BLUE}"            ▄▄"
-echo ${BLUE}"           █░░█           v1.0 Scripted by Vinh Francis Guyait"
-echo ${BLUE}"           █░░█"
-echo ${BLUE}"          █░░░█"
-echo ${BLUE}"         █░░░░█"
-echo ${BLUE}"███████▄▄█░░░░██████▄▄"   
-echo ${BLUE}"▓▓▓▓▓▓█░░░░░░░░░░░░░░█"
-echo ${BLUE}"▓▓▓▓▓▓█░░░░░░░░░░░░░░░█"
-echo ${BLUE}"▓▓▓▓▓▓█░░░░░░░░░░░░░░░█"
-echo ${BLUE}"▓▓▓▓▓▓█░░░░░░░░░░░░░░░█"
-echo ${BLUE}"▓▓▓▓▓▓█░░░░░░░░░░░░░░░█"
-echo ${BLUE}"▓▓▓▓▓▓█████░░░░░░░░░░█"
-echo ${BLUE}"██████▀    ▀▀██████▀"
-echo''
+echo ${BLUE}'                  o$$'   
+echo ${BLUE}'             $$    $"o$"  oooo' 
+echo ${BLUE}'            o"$  $"  o$o$" $"'
+echo ${BLUE}'            $ "$$    "$   $oooooo'   
+echo ${BLUE}'       o   $   "           ooo'     
+echo ${BLUE}'        o  "  "    oo""o    "o"""'     
+echo ${BLUE}'   $   o                " "o"$$oo'     
+echo ${BLUE}'   "$                   $  o  $ "'      
+echo ${BLUE}' "o"$                  "$ o"$o o'       
+echo ${BLUE}' ooo                   " "   $ "'       
+echo ${BLUE}' """o    "                  $" $      eikichizoku@github !'         
+echo ${BLUE}'  """$oo          oo$$o$ooooo  o"'        
+echo ${BLUE}'   $""""        $$$$$$$$$$$$$$ o$'       
+echo ${BLUE}'  "$          o$$" """$$$$$$$" $'        
+echo ${BLUE}'   "ooo  o    $$o     $$$$$$" $'         
+echo ${BLUE}'      """ $o   $$$ooo$$$$$" o"'          
+echo ${BLUE}'          o$$    " """"ooo$"o ooo'           
+echo ${BLUE}'         o"o"""ooo$o"$$"$$oooo   ""o'           
+echo ${BLUE}'       o$$o" " o" $""$$o"  o"" o   $'      
+echo ${BLUE}'      $$ o" $ o" o  $""" o  """" oo"'        
+echo ${BLUE}'     $oo  $"$o$oo  $" ""oo$" o$ $'               
+echo ${BLUE}'    $oo " " o o $"$     "" "   "$" "o'          
+echo ${BLUE}'   o"  """ "    $       """"o  o" "$'            
+echo ${BLUE}'   $"" " o" " """            "o $$"'            
+echo ${BLUE}'   $$ooooo o   $o              "'              
+echo ${BLUE}'  o$$$$$$$$$$$$$oo'                           
+echo ${BLUE}' o$$$$$$$$$$$$$"$""""oo'                    
+echo ${BLUE}'$o "$$$o$$ """""o     o$'                  
+echo ${BLUE}' "$ooo "        $ooo$""' 
+echo ${BLUE}'     """"$ $o$"""'     
 echo''
 echo ${RED}"############## ILLEGAL CHARACTERS REMOVAL FROM BASENAME FILES ##############"
 echo''
@@ -47,7 +63,7 @@ echo ${BLUE} • Please type all the characters you want to get rid of in your f
 export illegalchars
 read illegalchars
 echo''
-
+:
 echo $illegalchars
 
 #Install brew then install the tag utility
