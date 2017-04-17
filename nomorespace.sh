@@ -47,7 +47,7 @@ read -r yn
 
 if [[ "$yn" =~ ^([yY][eE][sS]|[yY])+$ ]]
 	then
-		echo "I will need your password to perform few actions"
+		#echo "I will need your password to perform few actions"
 		#sudo -s
 		echo''
 		echo ${WHITE}"Enumerating each folder size under $USER's home directory..."
@@ -62,7 +62,7 @@ if [[ "$yn" =~ ^([yY][eE][sS]|[yY])+$ ]]
 		if [[ "$yn" =~ ^([nN][oO]|[nN])+$ ]]
 			then
 				read -ep "Folder:" WHERE
-				echo "I will need your password to perform few actions"
+				#echo "I will need your password to perform few actions"
 				#sudo -s
 		
 				case ${WHERE} in
@@ -74,7 +74,7 @@ if [[ "$yn" =~ ^([yY][eE][sS]|[yY])+$ ]]
 							if [ -z "$bigwherespace" ]
 								then
 									echo ${WHITE} "Nothing over 1Gb in ${RED}$WHERE ${WHITE}- probably need to look somewhere else !"
-							else
+								else
 									echo ${WHITE}"The biggest file / folder is ${RED}$bigwherespace ${WHITE}with a size of ${RED}$bigwherespacesize${WHITE}"
 							fi
 					;;  				
