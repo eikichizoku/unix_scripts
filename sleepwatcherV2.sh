@@ -1,5 +1,6 @@
 #!/bin/sh
 
+#A weird bug is affecting Mac Os X when it's binded to an Active Directory domain : when locked after a sleep mode, a failure from the opendirectoryd daemon stop all connections with AD and block the password authentication. There are many workarounds but they all do the same at the end, kill the opendirectoryd process which restarts automatically and reenable the connection. This script uses sleepwatcher and launch a script that kills/restart the daemon each time the laptop goes off from sleep mode.
 
 
 #Functions
@@ -51,7 +52,7 @@ echo''
 }
 
 #Install rc.killopendirectory
-function install_kill()
+function install_killopendirectoryd()
 {
 echo''	
 echo "Creating the launch script as /etc/rc.killiopendirectoryd"
@@ -79,7 +80,7 @@ function install_sleepwatcher()
 echo''
 echo "Installing sleepwatcher..."
 echo''
-brew install sleepwatcher >> /dev/null
+brew install sleepwatcher
 sudo chmod 777 /usr/local/share/man/man8
 chmod 777 /usr/local/sbin/
 brew link sleepwatcher
@@ -116,10 +117,11 @@ read -r yn
 
 
 
-#set -x
+##set -x
 if [[ "$yn" =~ ^([yY][eE][sS]|[yY])+$ ]]
         then
 		sudo_ask		
+#If the script killopendirectoryd is installed, verify if sleepwatcher is here and running, if not, check if homebrew is here and install if needed, then install sleepwatcher
 		echo''
 		echo "Lets see if you already installed the killopendirectory daemon..."
                 
@@ -129,7 +131,7 @@ if [[ "$yn" =~ ^([yY][eE][sS]|[yY])+$ ]]
 				echo ${RED}"killopendirectoryd is already present"
 				echo''
 				echo ${WHITE}"Lets see if sleepwatcher is installed and running it..."
-					if [ -f "/usr/local/sbin/sleepwatcher" ];
+					if [ -f "/usr/local/sbin/sleepwatcher" ]
 						then
 							echo''
 							echo ${RED}"sleepwatcher is installed and running killopendirectoryd - We're all good"
@@ -137,41 +139,50 @@ if [[ "$yn" =~ ^([yY][eE][sS]|[yY])+$ ]]
 							echo "Hit any key to exit" ${NC}
 							read bye
 							clear
+									
 						else
 							echo''
 							echo ${RED}"sleepwatcher is not installed"
 							if [ ! -f "/usr/local/bin/brew" ]
 								then
-									install_brew
+									echo "Homebrew is needed to install sleepwatcher, installing it now"
+									install_homebrew
 									install_sleepwatcher
 									echo ${RED}"sleepwatcher is installed and running killopendirectoryd - We're all good"
 									echo''
-								
+						
 								else
 									install_sleepwatcher
 									echo ${RED}"sleepwatcher is installed and running killopendirectoryd - We're all good"
 									echo''
-							
+					
 							fi
 					fi		
+#Script killopendirectory not here, verify if sleepwatcher is installed, if yes, create the script and create/install the script, if not, install homebrew if needed, then install sleeptwatcher, then the script.
 			else
 				echo "Script not present - veryfing if sleepwatcher is installed"
-				if [ -f "/usr/local/sleepwatcher" ]					
+				if [ -f "/usr/local/sbin/sleepwatcher" ]					
 					then
 						echo "sleepwatcher is installed"
-						install_killopendorectoryd
+						install_killopendirectoryd
 					else
 						echo "sleepwatcher is not installed"
 						if [ ! -f "/usr/local/bin/brew" ]
 							then
-								install_brew
+								echo "Homebrew is needed to install sleepwatcher, installing it now"
+								install_homebrew
 								install_sleepwatcher
-								install killopendirectoryd
+								install_killopendirectoryd
 							else
 								install_sleepwatcher
-								install_killopendrectoryd
+								install_killopendirectoryd
 						fi
 				fi
+				
+				echo ${RED}"sleepwatcher is installed and running killopendirectoryd - We're all good"
+				echo''
+
+
 		fi
 	else
 		echo ${WHITE}"Bye"
