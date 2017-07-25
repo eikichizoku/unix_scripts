@@ -5,10 +5,7 @@
 
 #FUNCTIONS AND VARIABLES DECLARATIONS ########################################################################################################
 
-#We'll use those ones to evaluate if sleepwatcher is loaded and running
-PROCESS=$(pgrep sleepwatcher)
-MODULE=$(launchctl list | grep -i sleepwatcher)
-
+#Vinh's common functions ########################
 #Colors
 function rainbow_colors()
 {
@@ -19,7 +16,31 @@ HIGHLIGHT='\033[37;7m'
 NC='\033[0m'
 }
 
-#Install rc.killopendirectory
+#Press enter then quit
+function hit_to_quit()
+{
+echo''
+echo ${BLUE}"Hit return to quit"${NC}
+read bye
+clear
+}
+
+#sudo rights
+function sudo_ask()
+{
+echo''
+echo ${BLUE} "I need your password to perform few actions"
+su -
+}
+
+#################################################
+
+
+#We'll use those ones to evaluate if sleepwatcher is loaded and running
+PROCESS=$(pgrep sleepwatcher)
+MODULE=$(launchctl list | grep -i de.bernhard-baehr.sleepwatcher)
+
+#Install rc.killopendirectory and it plist in launchaemons
 function install_killopendirectoryd()
 {
 echo''	
@@ -37,14 +58,10 @@ sudo mv ~/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist /Library/Launc
 rm -rf ~/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
 echo''
 echo "Loading daemon..."
-sudo launchctl load /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
+launchctl load /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
 sleep 2
 echo ''
 echo "Sleepwatcher is set and ready to kill opendirectoryd after each wake"
-echo''
-echo ${BLUE}"Closing script, hit enter to proceed"${NC}
-read bye
-clear
 }
 
 #Install Sleepwatcher
@@ -60,9 +77,6 @@ chmod 755 /usr/local/share/man/man8
 chmod 755 /usr/local/sbin/
 echo''
 echo "Sleepwatcher has been installed successfully"
-echo''
-echo ${BLUE}"Strike any key to continue"${NC}
-read go
 }
 
 #Install Homebrew
@@ -73,56 +87,51 @@ echo''
 echo ${RED}"Homebrew has been installed successfully"
 }
 
-#sudo rights
-function sudo_ask()
+#Is everything is working now ? Check if the process sleepwatcher is up and if the module is loaded
+function is_everything_is_alright_now()
 {
-echo ${BLUE} "I need your password to perform few actions"
-su -
-echo''
-}
-
-#Is everything is working now ?
-function is_everything_alright_now()
-{
-if [ "${PROCESS}" -gt 0 ] || [ -f "/etc/rc.killopendirectoryd" ] || [ -f "/Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist" ] || [ -z "$MODULE"] 
+if [ -n "$PROCESS" ] || [ -n "$MODULE" ]
 	then
 		echo''
-		echo ${RED}"Sleepwatcher is installed and running killopendirectoryd - We're all good"${NC}
-		echo''
-		read bye
-		clear
+		echo ${RED}"Sleepwatcher is installed and running killopendirectoryd - We're all good"
+		echo
+		echo "############################################ IMPORTANT ###################################################"
+		echo ''
+		echo "If for some reason the issue happens again, just clap your laptop lid for 3 seconds and reopen it"
+		echo "                               Then try to type your password again"
+		echo ''
+		echo "##########################################################################################################"
 	else
 		echo''
 		echo ${RED}"Something went wrong, we are unable to install the script on your machine. Meet your nearest IT to reimage your laptop"${NC}
-		echo ${BLUE}"Closing script, hit enter to proceed"${NC}
-		read bye
-		clear
 fi
 }
 
 #Uninstaller
 function uninstall_sleepwatcher()
 {
+echo''
 echo ${BLUE}"Are you sure you want to uninstall sleepwatcher and all the dependent files ?"
-read yn2
-if [[ "$yn2" =~ ^([yY][eE][sS]|[yY])+$ ]]
-	then
-		brew uninstall sleepwatcher
-		rm -rf /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
-		rm -rf /etc/rc.d/killopendirectoryd		
-		echo "Sleepwatcher has been successfully uninstalled, press a key to exit"${NC}
-		read bye
-		clear
-	else
-		echo "Exiting without changes, press a key to quit"${NC}
-		read bye
-		clear
-fi	
-
+read -p "[y/n] : " yn2
+case $yn2 in
+y|Y|yes|Yes)
+	brew uninstall sleepwatcher
+	rm -rf /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
+	rm -rf /etc/rc.d/killopendirectoryd		
+	launchctl unload /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
+	echo''
+	echo "Sleepwatcher has been successfully uninstalled"
+;;
+n|N|no|No)
+	echo ${RED}"No changes were made"
+;;
+*)
+	echo ${RED}"Wrong input, exiting"
+;;
+esac
 }
 
 #END OF FUNCTIONS AND VARIABLES DECLARATIONS ##############################@#####################################################
-
 
 
 
@@ -133,100 +142,115 @@ clear
 rainbow_colors
 #osascript -e "tell application \"Terminal\" to set background color of window 1 to {0.2549019753932953", "0.4117647111415863", "0.6666666865348816"}
 
-
 echo ${BLUE}"#####################################"
 echo "Sleepwatcher Installer"
 echo "#####################################"
 echo''
-echo "Do you want to install / uninstall sleepwatcher ? [1-Install / 2-Uninstall]"
-read iu
+echo "Do you want to install / uninstall sleepwatcher ?"
+read -p "[1-Install / 2-Uninstall / 3-Quit] : " iu
 
 case $iu in
-1)
-
-echo''
-echo ${BLUE}"This script will install sleepwatcher through homebrew and set it to kill opendirectoryd after each wake up state. This will create launchdaemons files to do so -  Do you want to proceed ? [y/n]"${NC}
-read -r yn
-
-#Sorry for the Pyramid, i love ancient Egypt
-
-if [[ "$yn" =~ ^([yY][eE][sS]|[yY])+$ ]]
-        then
+1|i|I|install|Install)
+	echo''
+	echo ${BLUE}"This script will install sleepwatcher through homebrew and set it to kill the opendirectoryd daemon after each wake up state, forcing it to reinitialize it connection to AD. This installation will create launchdaemons files to do so -  Do you want to proceed ?"
+	read -p "[y/n] : " yn
+	
+	case $yn in
+	y|Y|yes|Yes)
 		sudo_ask 
 		echo''
 		echo ${RED}"Let's see if you already installed the killopendirectory daemon..."
 		sleep 2                
-                if [ -f "/etc/rc.killopendirectoryd" ] && [ -f "/Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist" ]
-        	        then
+set -x			
+			if [ -n "$MODULE" ]
+        	       	then
 				echo''
 				echo "killopendirectoryd is already present"
 				echo''
 				sleep 2
-				echo "Lets see if sleepwatcher is installed and running it..."
+				echo "Let's see if sleepwatcher is installed and running it..."
 					sleep 2
-					if [ -f "/usr/local/sbin/sleepwatcher" ] && [ "${PROCESS}" -gt 0 ]
-						then
-							is_everything_is_alright_now			
-						else
-							echo''
-							echo "Sleepwatcher is not installed or not running, let's reinstall it properly"
-							sleep 2
+					if [ -f "/usr/local/sbin/sleepwatcher" ] || [ -n "$PROCESS" ]
+					then
+						is_everything_is_alright_now
+						hit_to_quit			
+					else
+						echo''
+						echo "Sleepwatcher is not installed or not running, let's reinstall it properly"
+						sleep 2
 							if [ ! -f "/usr/local/bin/brew" ]
-								then
-									echo''
-									echo "Homebrew is needed to install sleepwatcher, installing it now"
-									install_homebrew
+							then
+								echo''
+								echo "Homebrew is needed to install sleepwatcher, installing it now"
+								install_homebrew
+								install_sleepwatcher
+								launchctl load /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
+								is_everything_is_alright_now
+								hit_to_quit
+							else
 									install_sleepwatcher
 									launchctl load /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
 									is_everything_is_alright_now
-								else
-									install_sleepwatcher
-									launchctl load /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
-									is_everything_is_alright_now
-					
+									hit_to_quit
 							fi
 					fi		
-		else
+			else
 				echo''
-				echo "Script not present - veryfing if sleepwatcher is installed"
+				echo ${RED}"Script not present - veryfing if sleepwatcher is installed"
 				sleep 2
-				if [ -f "/usr/local/sbin/sleepwatcher" ] && [ "${PROCESS}" -gt 0 ]					
+					if [ -n "${PROCESS}" ]					
 					then
 						echo ''
 						echo "Sleepwatcher is installed"
 						install_killopendirectoryd
+						is_everything_is_alright_now
+						hit_to_quit
 					else
 						echo''
 						echo "Sleepwatcher is not installed or running properly, let's reinstall it"
 						sleep 2
-						if [ ! -f "/usr/local/bin/brew" ]
+							if [ ! -f "/usr/local/bin/brew" ]
 							then
 								echo''
 								echo "Homebrew is needed to install sleepwatcher, installing it now"
-								echo''
 								install_homebrew
 								install_sleepwatcher
 								install_killopendirectoryd
 								is_everything_is_alright_now
+								hit_to_quit
 							else
 								install_sleepwatcher
 								install_killopendirectoryd
 								is_everything_is_alright_now
-						fi
-				fi
-				
-		
+								hit_to_quit
+							fi
+					fi
+			fi
+	;;
+	n|N|no|No)
+		echo''
+		echo ${RED}"No changes were made"
+		hit_to_quit
+	;;
+	*)
+		echo''
+		echo ${RED}"Wrong input, exiting"
+		hit_to_quit
+	;;
+	esac;;
 
-		fi
-	else
-		echo ${RED}"Bye"
-		echo ${BLUE}"Hit any key to exit" ${NC}
-		read bye
-		clear
-fi;;
-2) uninstall_sleepwatcher;;
+2|u|U|uninstall|Uninstall) 
+	uninstall_sleepwatcher
+	hit_to_quit
+;;
 
-*) echo ${WHITE}"Wrong input exiting script";;
+3|q|Q|quit|Quit)
+	hit_to_quit
+;;
+
+*)
+	echo'' 
+	echo ${RED}"Wrong input, exiting"
+	hit_to_quit
+;;
 esac
-
-
