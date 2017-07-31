@@ -161,7 +161,7 @@ case $iu in
 		echo''
 		echo ${RED}"Let's see if you already installed the killopendirectory daemon..."
 		sleep 2                
-set -x			
+#set -x			
 			if [ -n "$MODULE" ]
         	       	then
 				echo''
