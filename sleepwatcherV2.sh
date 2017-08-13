@@ -6,6 +6,7 @@
 #FUNCTIONS AND VARIABLES DECLARATIONS ########################################################################################################
 
 #Vinh's common functions ########################
+
 #Colors
 function rainbow_colors()
 {
@@ -29,8 +30,11 @@ clear
 function sudo_ask()
 {
 echo''
-echo ${BLUE} "I need your password to perform few actions"
-su -
+if [ $EUID != 0 ]; then
+    echo "Enter your password please"
+	sudo "$0" "$@"
+    exit $?
+fi
 }
 
 #################################################
@@ -40,11 +44,11 @@ su -
 PROCESS=$(pgrep sleepwatcher)
 MODULE=$(launchctl list | grep -i de.bernhard-baehr.sleepwatcher)
 
-#Install rc.killopendirectory and it plist in launchaemons
+#Install rc.killopendirectory and its plist in launchaemons
 function install_killopendirectoryd()
 {
 echo''	
-echo ${RED}"Creating the launch script as /etc/rc.killiopendirectoryd"
+echo ${RED}"Creating the launch script /etc/rc.killiopendirectoryd"
 printf '#!/bin/sh\nkillall -9 opendirectoryd\n' > ~/killopendirectoryd.temp
 chmod +x ~/killopendirectoryd.temp
 sudo mv ~/killopendirectoryd.temp /etc/rc.killopendirectoryd
@@ -140,6 +144,7 @@ esac
 
 clear
 rainbow_colors
+sudo_ask
 #osascript -e "tell application \"Terminal\" to set background color of window 1 to {0.2549019753932953", "0.4117647111415863", "0.6666666865348816"}
 
 echo ${BLUE}"#####################################"
@@ -149,6 +154,8 @@ echo''
 echo "Do you want to install / uninstall sleepwatcher ?"
 read -p "[1-Install / 2-Uninstall / 3-Quit] : " iu
 
+#set -x
+
 case $iu in
 1|i|I|install|Install)
 	echo''
@@ -157,11 +164,51 @@ case $iu in
 	
 	case $yn in
 	y|Y|yes|Yes)
-		sudo_ask 
 		echo''
 		echo ${RED}"Let's see if you already installed the killopendirectory daemon..."
 		sleep 2                
-set -x			
+#set -x		
+
+#Trying to use elif
+
+#if [ -n "$MODULE" ] || [ -n "$PROCESS" ]
+#then
+#	echo''
+#	echo "Everything is already there and running"
+
+#elif [ -n "$MODULE" ] || [ ! -n "$PROCESS" ] || [ ! -f "/usr/bin/brew" ]
+#then
+#	echo''
+#	echo "Sleepwatcher is not installed or not running, let's reinstall it properly"
+#	echo "Homebrew in not installed, installing it first"
+#	sleep 2
+#	install_homebrew
+#	install_sleepwatcher
+#	launchctl load /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
+#
+#elif [ -n "$MODULE" ] || [ ! -n "$PROCESS" ] || [ -f "usr/bin/brew" ]
+#then
+#	echo''
+#	echo "Sleepwatcher is not installed or not running, let's reinstall it properly"
+#	install sleepwatcher
+#	launchctl load /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
+
+#elif	[ -n "$MODULE" ] || [ ! -n "$PROCESS" ] || [ ! -f "/usr/bin/brew" ]
+#then
+#	echo ''
+#	echo "Nothing has been installed, proceeding to install the whole fix"
+#	install_homebrew
+#	install_sleepwatcher
+#	launchctl load /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
+#
+#else
+#	echo''
+#	echo "after else"
+#
+#fi
+#is_everything_is_alright_now
+#hit_to_quit
+	
 			if [ -n "$MODULE" ]
         	       	then
 				echo''
@@ -198,10 +245,10 @@ set -x
 				echo''
 				echo ${RED}"Script not present - veryfing if sleepwatcher is installed"
 				sleep 2
-					if [ -n "${PROCESS}" ]					
+					if [ -f "/usr/local/sbin/sleepwatcher" ] || [ -n "${PROCESS}" ]					
 					then
 						echo ''
-						echo "Sleepwatcher is installed"
+						echo "Sleepwatcher is installed and running"
 						install_killopendirectoryd
 						is_everything_is_alright_now
 						hit_to_quit
