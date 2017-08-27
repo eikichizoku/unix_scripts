@@ -27,13 +27,16 @@ clear
 }
 
 #sudo rights
+set -x
 function sudo_ask()
 {
 echo''
 if [ $EUID != 0 ]; then
     echo "Enter your password please"
 	sudo "$0" "$@"
-    exit $?
+    	exit $?
+else
+	echo "Privileges already elevated"
 fi
 }
 
@@ -121,7 +124,7 @@ case $yn2 in
 y|Y|yes|Yes)
 	brew uninstall sleepwatcher
 	rm -rf /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
-	rm -rf /etc/rc.d/killopendirectoryd		
+	rm -rf /etc/rc.killopendirectoryd		
 	launchctl unload /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
 	echo''
 	echo "Sleepwatcher has been successfully uninstalled"
@@ -141,10 +144,9 @@ esac
 
 
 #START SCRIPT ####################################################################################################################
-
+sudo_ask
 clear
 rainbow_colors
-sudo_ask
 #osascript -e "tell application \"Terminal\" to set background color of window 1 to {0.2549019753932953", "0.4117647111415863", "0.6666666865348816"}
 
 echo ${BLUE}"#####################################"
@@ -167,48 +169,7 @@ case $iu in
 		echo''
 		echo ${RED}"Let's see if you already installed the killopendirectory daemon..."
 		sleep 2                
-#set -x		
-
-#Trying to use elif
-
-#if [ -n "$MODULE" ] || [ -n "$PROCESS" ]
-#then
-#	echo''
-#	echo "Everything is already there and running"
-
-#elif [ -n "$MODULE" ] || [ ! -n "$PROCESS" ] || [ ! -f "/usr/bin/brew" ]
-#then
-#	echo''
-#	echo "Sleepwatcher is not installed or not running, let's reinstall it properly"
-#	echo "Homebrew in not installed, installing it first"
-#	sleep 2
-#	install_homebrew
-#	install_sleepwatcher
-#	launchctl load /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
-#
-#elif [ -n "$MODULE" ] || [ ! -n "$PROCESS" ] || [ -f "usr/bin/brew" ]
-#then
-#	echo''
-#	echo "Sleepwatcher is not installed or not running, let's reinstall it properly"
-#	install sleepwatcher
-#	launchctl load /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
-
-#elif	[ -n "$MODULE" ] || [ ! -n "$PROCESS" ] || [ ! -f "/usr/bin/brew" ]
-#then
-#	echo ''
-#	echo "Nothing has been installed, proceeding to install the whole fix"
-#	install_homebrew
-#	install_sleepwatcher
-#	launchctl load /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
-#
-#else
-#	echo''
-#	echo "after else"
-#
-#fi
-#is_everything_is_alright_now
-#hit_to_quit
-	
+			
 			if [ -n "$MODULE" ]
         	       	then
 				echo''
