@@ -27,7 +27,7 @@ clear
 }
 
 #sudo rights
-set -x
+#set -x
 function sudo_ask()
 {
 echo''
@@ -78,10 +78,10 @@ echo''
 echo ${RED}"Installing sleepwatcher..."
 brew install sleepwatcher
 sudo chmod 777 /usr/local/share/man/man8
-chmod 777 /usr/local/sbin/
+sudo chmod 777 /usr/local/sbin/
 brew link sleepwatcher
-chmod 755 /usr/local/share/man/man8
-chmod 755 /usr/local/sbin/
+sudo chmod 755 /usr/local/share/man/man8
+sudo chmod 755 /usr/local/sbin/
 echo''
 echo "Sleepwatcher has been installed successfully"
 }
@@ -97,6 +97,7 @@ echo ${RED}"Homebrew has been installed successfully"
 #Is everything is working now ? Check if the process sleepwatcher is up and if the module is loaded
 function is_everything_is_alright_now()
 {
+set -x
 if [ -n "$PROCESS" ] || [ -n "$MODULE" ]
 	then
 		echo''
@@ -123,9 +124,9 @@ read -p "[y/n] : " yn2
 case $yn2 in
 y|Y|yes|Yes)
 	brew uninstall sleepwatcher
-	rm -rf /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
-	rm -rf /etc/rc.killopendirectoryd		
 	launchctl unload /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
+	sudo rm -rf /Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-killopendirectoryd.plist
+	sudo rm -rf /etc/rc.killopendirectoryd		
 	echo''
 	echo "Sleepwatcher has been successfully uninstalled"
 ;;
@@ -144,7 +145,6 @@ esac
 
 
 #START SCRIPT ####################################################################################################################
-sudo_ask
 clear
 rainbow_colors
 #osascript -e "tell application \"Terminal\" to set background color of window 1 to {0.2549019753932953", "0.4117647111415863", "0.6666666865348816"}
